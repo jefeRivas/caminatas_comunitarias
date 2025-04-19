@@ -45,95 +45,105 @@ CREATE TABLE perros (
     FOREIGN KEY (refugio_id) REFERENCES refugios(id)
 );
 
--- 5. Tabla de caminatas
-CREATE TABLE caminatas (
+-- 5. Tabla de rutas disponibles
+CREATE TABLE rutas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    fecha DATETIME,
-    duracion INT,
-    ubicacion VARCHAR(255),
-    descripcion TEXT
+    nombre VARCHAR(100),
+    distancia_km DECIMAL(5,2),
+    dificultad ENUM('fácil', 'moderada', 'difícil'),
+    descripcion TEXT,
+    puntos_referencia TEXT,
+    tiempo_estimado_min INT
 );
 
--- 6. Tabla de perros_caminatas
-CREATE TABLE perros_caminatas (
+-- 6. Tabla de horarios disponibles
+CREATE TABLE horarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    dia_semana ENUM('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'),
+    hora_inicio TIME,
+    hora_fin TIME,
+    max_voluntarios INT
+);
+
+-- 7. Tabla de caminatas programadas
+CREATE TABLE caminatas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE,
+    horario_id INT,
+    ruta_id INT,
+    estado ENUM('pendiente', 'en_progreso', 'completada', 'cancelada') DEFAULT 'pendiente',
+    FOREIGN KEY (horario_id) REFERENCES horarios(id),
+    FOREIGN KEY (ruta_id) REFERENCES rutas(id)
+);
+
+-- 8. Tabla de registro de caminatas (relación muchos a muchos entre usuarios y caminatas)
+CREATE TABLE registro_caminatas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT,
     caminata_id INT,
     perro_id INT,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    asistencia BOOLEAN DEFAULT FALSE,
+    comentarios TEXT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (caminata_id) REFERENCES caminatas(id),
     FOREIGN KEY (perro_id) REFERENCES perros(id)
 );
 
--- 7. Tabla de voluntarios_caminatas
-CREATE TABLE voluntarios_caminatas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    caminata_id INT,
-    usuario_id INT,
-    FOREIGN KEY (caminata_id) REFERENCES caminatas(id),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-);
-
--- 8. Tabla de adopciones
-CREATE TABLE adopciones (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- 9. Tabla de preferencias de perros por usuario
+CREATE TABLE preferencias_perros (
     usuario_id INT,
     perro_id INT,
-    fecha_adopcion DATETIME,
-    estado ENUM('pendiente', 'aceptada', 'rechazada') DEFAULT 'pendiente',
+    preferencia INT, -- 1 a 5, siendo 5 la mayor preferencia
+    PRIMARY KEY (usuario_id, perro_id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (perro_id) REFERENCES perros(id)
 );
 
--- 9. Tabla de reportes_perros
-CREATE TABLE reportes_perros (
+-- 10. Tabla de preferencias de rutas por usuario
+CREATE TABLE preferencias_rutas (
+    usuario_id INT,
+    ruta_id INT,
+    preferencia INT, -- 1 a 5, siendo 5 la mayor preferencia
+    PRIMARY KEY (usuario_id, ruta_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (ruta_id) REFERENCES rutas(id)
+);
+
+-- 11. Tabla de historial de caminatas
+CREATE TABLE historial_caminatas (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    registro_caminata_id INT,
+    duracion_real_min INT,
+    distancia_real_km DECIMAL(5,2),
+    comportamiento_perro ENUM('excelente', 'bueno', 'regular', 'malo'),
+    observaciones TEXT,
+    FOREIGN KEY (registro_caminata_id) REFERENCES registro_caminatas(id)
+);
+
+-- 12. Tabla de requisitos para pasear perros
+CREATE TABLE requisitos_perros (
     perro_id INT,
-    descripcion TEXT,
-    fecha DATETIME,
+    requisito VARCHAR(255),
+    PRIMARY KEY (perro_id, requisito),
     FOREIGN KEY (perro_id) REFERENCES perros(id)
 );
 
--- 10. Tabla de vacunas
-CREATE TABLE vacunas (
+-- 13. Tabla de equipamiento para caminatas
+CREATE TABLE equipamiento (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100),
-    descripcion TEXT
-);
-
--- 11. Tabla de vacunas_perros
-CREATE TABLE vacunas_perros (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    perro_id INT,
-    vacuna_id INT,
-    fecha_aplicacion DATE,
-    FOREIGN KEY (perro_id) REFERENCES perros(id),
-    FOREIGN KEY (vacuna_id) REFERENCES vacunas(id)
-);
-
--- 12. Tabla de donaciones
-CREATE TABLE donaciones (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT,
-    monto DECIMAL(10,2),
-    fecha DATETIME,
-    metodo_pago VARCHAR(50),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-);
-
--- 13. Tabla de mensajes_contacto
-CREATE TABLE mensajes_contacto (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT,
-    asunto VARCHAR(100),
-    mensaje TEXT,
-    fecha DATETIME,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-);
-
--- 14. Tabla de eventos
-CREATE TABLE eventos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(100),
     descripcion TEXT,
-    fecha DATETIME,
-    lugar VARCHAR(255)
+    cantidad_disponible INT
+);
+
+-- 14. Tabla de préstamo de equipamiento
+CREATE TABLE prestamo_equipamiento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    registro_caminata_id INT,
+    equipamiento_id INT,
+    cantidad INT,
+    devuelto BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (registro_caminata_id) REFERENCES registro_caminatas(id),
+    FOREIGN KEY (equipamiento_id) REFERENCES equipamiento(id)
 );

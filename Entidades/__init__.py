@@ -1,5 +1,5 @@
 # Importar todos los modelos para facilitar el acceso
-from .usuarios import Usuarios
+from .UserModel import UserModel
 from .perfiles_voluntarios import PerfilesVoluntarios
 from .refugios import Refugios
 from .perros import Perros

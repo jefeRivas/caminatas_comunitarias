@@ -147,3 +147,101 @@ CREATE TABLE prestamo_equipamiento (
     FOREIGN KEY (registro_caminata_id) REFERENCES registro_caminatas(id),
     FOREIGN KEY (equipamiento_id) REFERENCES equipamiento(id)
 );
+
+--Poblar tablas con datos de prueba:
+USE caminatas_comunitarias;
+
+-- 1. Usuarios
+INSERT INTO usuarios (nombre, correo, contraseña, rol) VALUES
+('Laura Gómez', 'laura@example.com', 'pass123', 'voluntario'),
+('Carlos Pérez', 'carlos@example.com', 'pass456', 'voluntario'),
+('Ana Torres', 'ana@example.com', 'pass789', 'voluntario'),
+('Admin User', 'admin@example.com', 'adminpass', 'admin');
+
+-- 2. Perfiles de Voluntarios
+INSERT INTO perfiles_voluntarios (id, telefono, direccion, experiencia) VALUES
+(1, '3001234567', 'Calle 123', 'Ama los animales'),
+(2, '3009876543', 'Carrera 45', 'Ha paseado perros antes'),
+(3, '3011122233', 'Diagonal 78', 'Tiene experiencia en adiestramiento');
+
+-- 3. Refugios
+INSERT INTO refugios (nombre, direccion, telefono, correo) VALUES
+('Refugio Huellitas', 'Cra 10 #45-78', '3104567890', 'huellitas@refugio.com'),
+('Amigos Peludos', 'Cl 67 #12-34', '3111234567', 'amigospeludos@refugio.com');
+
+-- 4. Perros
+INSERT INTO perros (nombre, edad, raza, tamaño, energia, descripcion, estado, refugio_id) VALUES
+('Max', 3, 'Labrador', 'grande', 'alta', 'Juguetón y amigable', 'disponible', 1),
+('Luna', 2, 'Beagle', 'mediano', 'media', 'Cariñosa y activa', 'disponible', 1),
+('Rocky', 5, 'Pastor Alemán', 'grande', 'alta', 'Leal y protector', 'disponible', 2),
+('Mila', 1, 'Poodle', 'pequeño', 'baja', 'Tranquila y obediente', 'disponible', 2);
+
+-- 5. Rutas
+INSERT INTO rutas (nombre, distancia_km, dificultad, descripcion, puntos_referencia, tiempo_estimado_min) VALUES
+('Ruta Parque Central', 2.5, 'fácil', 'Recorrido por el parque del barrio', 'Cancha, Lago, Zona infantil', 30),
+('Sendero Montaña', 5.0, 'difícil', 'Subida por senderos naturales', 'Mirador, Cascada', 90),
+('Paseo Urbano', 3.2, 'moderada', 'Calles y avenidas del centro', 'Iglesia, Plazoleta, Cafés', 45),
+('Vuelta al lago', 4.1, 'moderada', 'Camino alrededor del lago municipal', 'Bosque, Mirador, Lago', 60);
+
+-- 6. Horarios
+INSERT INTO horarios (dia_semana, hora_inicio, hora_fin, max_voluntarios) VALUES
+('Sábado', '09:00:00', '10:00:00', 5),
+('Domingo', '08:30:00', '10:00:00', 4),
+('Miércoles', '17:00:00', '18:00:00', 3),
+('Viernes', '16:00:00', '17:30:00', 6);
+
+-- 7. Caminatas
+INSERT INTO caminatas (fecha, horario_id, ruta_id, estado) VALUES
+('2025-04-21', 1, 1, 'pendiente'),
+('2025-04-22', 2, 2, 'pendiente'),
+('2025-04-23', 3, 3, 'pendiente'),
+('2025-04-24', 4, 4, 'pendiente');
+
+-- 8. Registro de Caminatas
+INSERT INTO registro_caminatas (usuario_id, caminata_id, perro_id, asistencia, comentarios) VALUES
+(1, 1, 1, TRUE, 'Todo bien'),
+(2, 2, 2, TRUE, 'Muy animado el perro'),
+(3, 3, 3, FALSE, 'No pudo asistir'),
+(1, 4, 4, TRUE, 'Excelente experiencia');
+
+-- 9. Preferencias de perros
+INSERT INTO preferencias_perros (usuario_id, perro_id, preferencia) VALUES
+(1, 1, 5),
+(1, 2, 4),
+(2, 3, 5),
+(3, 4, 3);
+
+-- 10. Preferencias de rutas
+INSERT INTO preferencias_rutas (usuario_id, ruta_id, preferencia) VALUES
+(1, 1, 4),
+(2, 2, 5),
+(3, 3, 3),
+(1, 4, 2);
+
+-- 11. Historial de caminatas
+INSERT INTO historial_caminatas (registro_caminata_id, duracion_real_min, distancia_real_km, comportamiento_perro, observaciones) VALUES
+(1, 35, 2.4, 'excelente', 'Muy tranquilo'),
+(2, 90, 5.1, 'bueno', 'Se emocionó con otros perros'),
+(4, 55, 4.0, 'excelente', 'Muy obediente'),
+(3, 0, 0.0, 'regular', 'No asistió');
+
+-- 12. Requisitos para pasear perros
+INSERT INTO requisitos_perros (perro_id, requisito) VALUES
+(1, 'Debe tener correa'),
+(1, 'Debe ir con bozal'),
+(2, 'Llevar agua'),
+(3, 'Evitar ruidos fuertes');
+
+-- 13. Equipamiento
+INSERT INTO equipamiento (nombre, descripcion, cantidad_disponible) VALUES
+('Correa', 'Correa estándar de nylon', 10),
+('Bozal', 'Bozal talla grande', 5),
+('Botella de agua', 'Botella plástica reutilizable', 15),
+('Dispensador de bolsas', 'Para recoger excrementos', 12);
+
+-- 14. Préstamo de equipamiento
+INSERT INTO prestamo_equipamiento (registro_caminata_id, equipamiento_id, cantidad, devuelto) VALUES
+(1, 1, 1, TRUE),
+(2, 2, 1, FALSE),
+(3, 3, 1, FALSE),
+(4, 4, 1, TRUE);

@@ -25,9 +25,9 @@ class Usuarios:
     contrasenia: str = None
 
     def GetContrasenia(self) -> str:
-        return self.contrasenia
+        return self.contrasena
     def SetContrasenia(self, value: str) -> None:
-        self.contrasenia = value
+        self.contrasena = value
 
     rol: str = None
 

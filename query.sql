@@ -152,7 +152,7 @@ CREATE TABLE prestamo_equipamiento (
 USE caminatas_comunitarias;
 
 -- 1. Usuarios
-INSERT INTO usuarios (nombre, correo, contraseña, rol) VALUES
+INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES
 ('Laura Gómez', 'laura@example.com', 'pass123', 'voluntario'),
 ('Carlos Pérez', 'carlos@example.com', 'pass456', 'voluntario'),
 ('Ana Torres', 'ana@example.com', 'pass789', 'voluntario'),

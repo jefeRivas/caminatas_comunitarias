@@ -46,17 +46,17 @@ class CaminatasRepositorio:
         self.cursor.close()
         self.conn.close()
 
-# Ejemplo de uso
-if __name__ == "__main__":
-    repo = CaminatasRepositorio()
-    caminatas = repo.obtener_caminatas()
+# # Ejemplo de uso
+# if __name__ == "__main__":
+#     repo = CaminatasRepositorio()
+#     caminatas = repo.obtener_caminatas()
 
-    for caminata in caminatas:
-        print(f"Caminata {caminata.GetId()} - Fecha: {caminata.GetFecha()} - Estado: {caminata.GetEstado()}")
-        print(f"Usuario: {caminata.GetUsuario().GetNombre()}")
-        print(f"Perro: {caminata.GetPerro().GetNombre()}")
-        print(f"Horario: {caminata.GetHorario().GetDia_semana()}")
-        print(f"Ruta: {caminata.GetRuta().GetNombre()}")
-        print("---")
+#     for caminata in caminatas:
+#         print(f"Caminata {caminata.GetId()} - Fecha: {caminata.GetFecha()} - Estado: {caminata.GetEstado()}")
+#         print(f"Usuario: {caminata.GetUsuario().GetNombre()}")
+#         print(f"Perro: {caminata.GetPerro().GetNombre()}")
+#         print(f"Horario: {caminata.GetHorario().GetDia_semana()}")
+#         print(f"Ruta: {caminata.GetRuta().GetNombre()}")
+#         print("---")
 
-    repo.cerrar_conexion()
+#     repo.cerrar_conexion()

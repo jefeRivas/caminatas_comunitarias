@@ -170,7 +170,7 @@ INSERT INTO refugios (nombre, direccion, telefono, correo) VALUES
 ('Amigos Peludos', 'Cl 67 #12-34', '3111234567', 'amigospeludos@refugio.com');
 
 -- 4. Perros
-INSERT INTO perros (nombre, edad, raza, tamaño, energia, descripcion, estado, refugio_id) VALUES
+INSERT INTO perros (nombre, edad, raza, tamanio, energia, descripcion, estado, refugio_id) VALUES
 ('Max', 3, 'Labrador', 'grande', 'alta', 'Juguetón y amigable', 'disponible', 1),
 ('Luna', 2, 'Beagle', 'mediano', 'media', 'Cariñosa y activa', 'disponible', 1),
 ('Rocky', 5, 'Pastor Alemán', 'grande', 'alta', 'Leal y protector', 'disponible', 2),

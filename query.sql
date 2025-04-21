@@ -245,3 +245,22 @@ INSERT INTO prestamo_equipamiento (registro_caminata_id, equipamiento_id, cantid
 (2, 2, 1, FALSE),
 (3, 3, 1, FALSE),
 (4, 4, 1, TRUE);
+
+DELIMITER //
+
+CREATE PROCEDURE obtener_caminatas_completas()
+BEGIN
+    SELECT c.id, c.fecha, c.estado, 
+           u.nombre AS usuario_nombre, 
+           p.nombre AS perro_nombre, 
+           h.dia_semana, 
+           r.nombre AS ruta_nombre
+    FROM caminatas c
+    JOIN registro_caminatas rc ON rc.caminata_id = c.id
+    JOIN usuarios u ON u.id = rc.usuario_id
+    JOIN perros p ON p.id = rc.perro_id
+    JOIN horarios h ON h.id = c.horario_id
+    JOIN rutas r ON r.id = c.ruta_id;
+END //
+
+DELIMITER ;

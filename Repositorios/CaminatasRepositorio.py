@@ -8,26 +8,11 @@ from Utilidades.Configuracion import Configuracion
 
 class CaminatasRepositorio:
     def __init__(self):
-        # Usar pyodbc con la cadena de conexión definida
         self.conn = Configuracion.obtener_conexion()
         self.cursor = self.conn.cursor()
 
     def obtener_caminatas(self):
-        query = """
-            SELECT c.id, c.fecha, c.estado, 
-                   u.nombre AS usuario_nombre, 
-                   p.nombre AS perro_nombre, 
-                   h.dia_semana, 
-                   r.nombre AS ruta_nombre
-            FROM caminatas c
-            JOIN registro_caminatas rc ON rc.caminata_id = c.id
-            JOIN usuarios u ON u.id = rc.usuario_id
-            JOIN perros p ON p.id = rc.perro_id
-            JOIN horarios h ON h.id = c.horario_id
-            JOIN rutas r ON r.id = c.ruta_id
-        """
-
-        self.cursor.execute(query)
+        self.cursor.execute("{CALL obtener_caminatas_completas()}")
         results = self.cursor.fetchall()
 
         caminatas = []

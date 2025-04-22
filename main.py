@@ -2,9 +2,11 @@ from Repositorios.CaminatasRepositorio import CaminatasRepositorio
 from Repositorios.UsuariosRepositorio import UsuariosRepositorio
 from Repositorios.PerrosRepositorio import PerrosRepositorio
 from Repositorios.RefugiosRepositorio import RefugiosRepositorio
+from Repositorios.EquipamientoRepositorio import EquipamientoRepositorio
 from Entidades.Usuarios import Usuarios
 from Entidades.Perros import Perros
 from Entidades.Refugios import Refugios
+from Entidades.Equipamiento import Equipamiento
 import datetime
 
 def mostrar_menu_principal():
@@ -13,7 +15,8 @@ def mostrar_menu_principal():
     print("2. Gestionar Usuarios (CRUD)")
     print("3. Gestionar Perros (CRUD)")
     print("4. Gestionar Refugios (CRUD)")
-    print("5. Salir")
+    print("5. Gestionar Equipamiento (CRUD)")
+    print("6. Salir")
 
 def mostrar_menu_usuarios():
     print("\n--- GESTIÓN DE USUARIOS ---")
@@ -40,6 +43,15 @@ def mostrar_menu_refugios():
     print("3. Actualizar Refugio")
     print("4. Eliminar Refugio")
     print("5. Buscar Refugio por ID")
+    print("6. Volver al menú principal")
+    
+def mostrar_menu_equipamiento():
+    print("\n--- GESTIÓN DE EQUIPAMIENTO ---")
+    print("1. Listar Equipamientos")
+    print("2. Agregar Equipamiento")
+    print("3. Actualizar Equipamiento")
+    print("4. Eliminar Equipamiento")
+    print("5. Buscar Equipamiento por ID")
     print("6. Volver al menú principal")
 
 def consultar_caminatas():
@@ -261,6 +273,70 @@ def gestionar_refugios():
             print("❌ Opción no válida. Intente de nuevo.")
     
     repo.cerrar_conexion()
+    
+def gestionar_equipamiento():
+    repo = EquipamientoRepositorio()
+    
+    while True:
+        mostrar_menu_equipamiento()
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            equipamientos = repo.obtener_todos()
+            print("\n--- LISTADO DE EQUIPAMIENTOS ---")
+            for e in equipamientos:
+                print(f"{e.GetId()} - {e.GetNombre()} | Disponibles: {e.GetCantidad_disponible()} | {e.GetDescripcion()}")
+
+        elif opcion == "2":
+            equipamiento = Equipamiento()
+            equipamiento.SetNombre(input("Nombre: "))
+            equipamiento.SetDescripcion(input("Descripción: "))
+            equipamiento.SetCantidad_disponible(int(input("Cantidad disponible: ")))
+            
+            nuevo_id = repo.crear(equipamiento)
+            print(f"✅ Equipamiento creado con ID: {nuevo_id}")
+
+        elif opcion == "3":
+            id_equipamiento = int(input("ID del equipamiento a actualizar: "))
+            equipamiento = repo.obtener_por_id(id_equipamiento)
+            
+            if equipamiento:
+                equipamiento.SetNombre(input(f"Nombre ({equipamiento.GetNombre()}): ") or equipamiento.GetNombre())
+                equipamiento.SetDescripcion(input(f"Descripción ({equipamiento.GetDescripcion()}): ") or equipamiento.GetDescripcion())
+                equipamiento.SetCantidad_disponible(int(input(f"Cantidad disponible ({equipamiento.GetCantidad_disponible()}): ") or equipamiento.GetCantidad_disponible()))
+                
+                if repo.actualizar(equipamiento):
+                    print("✅ Equipamiento actualizado correctamente.")
+                else:
+                    print("❌ Error al actualizar el equipamiento.")
+            else:
+                print("❌ Equipamiento no encontrado.")
+        
+        elif opcion == "4":
+            id_equipamiento = int(input("ID del equipamiento a eliminar: "))
+            if repo.eliminar(id_equipamiento):
+                print("✅ Equipamiento eliminado correctamente.")
+            else:
+                print("❌ Error al eliminar el equipamiento o equipamiento no encontrado.")
+        
+        elif opcion == "5":
+            id_equipamiento = int(input("ID del equipamiento a buscar: "))
+            equipamiento = repo.obtener_por_id(id_equipamiento)
+            if equipamiento:
+                print("\n--- DETALLE DEL EQUIPAMIENTO ---")
+                print(f"ID: {equipamiento.GetId()}")
+                print(f"Nombre: {equipamiento.GetNombre()}")
+                print(f"Descripción: {equipamiento.GetDescripcion()}")
+                print(f"Cantidad disponible: {equipamiento.GetCantidad_disponible()}")
+            else:
+                print("❌ Equipamiento no encontrado.")
+        
+        elif opcion == "6":
+            break
+        else:
+            print("❌ Opción no válida. Intente de nuevo.")
+    
+    repo.cerrar_conexion()
 
 def main():
     while True:
@@ -276,6 +352,8 @@ def main():
         elif opcion == "4":
             gestionar_refugios()
         elif opcion == "5":
+            gestionar_equipamiento()
+        elif opcion == "6":
             print("👋 Saliendo del sistema...")
             break
         else:

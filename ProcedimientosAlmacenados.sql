@@ -22,7 +22,7 @@ DELIMITER //
 -- Obtener todos los usuarios
 CREATE PROCEDURE obtener_usuarios()
 BEGIN
-    SELECT id, nombre, correo, contrasena, rol, fecha_registro
+    SELECT id, nombre, correo, contrasenia, rol, fecha_registro
     FROM usuarios;
 END //
 
@@ -30,12 +30,12 @@ END //
 CREATE PROCEDURE insertar_usuario(
     IN p_nombre VARCHAR(100),
     IN p_correo VARCHAR(100),
-    IN p_contrasena VARCHAR(100),
+    IN p_contrasenia VARCHAR(100),
     IN p_rol VARCHAR(50),
     IN p_fecha_registro DATETIME
 )
 BEGIN
-    INSERT INTO usuarios (nombre, correo, contrasena, rol, fecha_registro)
+    INSERT INTO usuarios (nombre, correo, contrasenia, rol, fecha_registro)
     VALUES (p_nombre, p_correo, p_contrasena, p_rol, p_fecha_registro);
 END //
 
@@ -44,14 +44,14 @@ CREATE PROCEDURE actualizar_usuario(
     IN p_id INT,
     IN p_nombre VARCHAR(100),
     IN p_correo VARCHAR(100),
-    IN p_contrasena VARCHAR(100),
+    IN p_contrasenia VARCHAR(100),
     IN p_rol VARCHAR(50)
 )
 BEGIN
     UPDATE usuarios
     SET nombre = p_nombre,
         correo = p_correo,
-        contrasena = p_contrasena,
+        contrasenia = p_contrasenia,
         rol = p_rol
     WHERE id = p_id;
 END //
@@ -282,6 +282,84 @@ END //
 CREATE PROCEDURE EliminarRefugio(IN p_id INT)
 BEGIN
     DELETE FROM Refugios WHERE id = p_id;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+-- Procedimiento para obtener todos los equipamientos
+CREATE PROCEDURE ObtenerEquipamientos()
+BEGIN
+    SELECT 
+        id,
+        nombre,
+        descripcion,
+        cantidad_disponible
+    FROM 
+        Equipamiento;
+END //
+
+-- Procedimiento para obtener un equipamiento por ID
+CREATE PROCEDURE ObtenerEquipamientoPorID(IN p_id INT)
+BEGIN
+    SELECT 
+        id,
+        nombre,
+        descripcion,
+        cantidad_disponible
+    FROM 
+        Equipamiento
+    WHERE 
+        id = p_id;
+END //
+
+-- Procedimiento para crear un nuevo equipamiento
+
+
+-- Procedimiento corregido para crear equipamiento
+CREATE PROCEDURE CrearEquipamiento(
+    IN p_nombre VARCHAR(100),
+    IN p_descripcion TEXT,
+    IN p_cantidad INT,
+    OUT p_nuevo_id INT
+)
+BEGIN
+    INSERT INTO Equipamiento (
+        nombre,
+        descripcion,
+        cantidad_disponible
+    )
+    VALUES (
+        p_nombre,
+        p_descripcion,
+        p_cantidad
+    );
+    
+    SET p_nuevo_id = LAST_INSERT_ID();
+END //
+
+-- Procedimiento para actualizar un equipamiento
+CREATE PROCEDURE ActualizarEquipamiento(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100),
+    IN p_descripcion TEXT,
+    IN p_cantidad INT
+)
+BEGIN
+    UPDATE Equipamiento
+    SET 
+        nombre = p_nombre,
+        descripcion = p_descripcion,
+        cantidad_disponible = p_cantidad
+    WHERE 
+        id = p_id;
+END //
+
+-- Procedimiento para eliminar un equipamiento
+CREATE PROCEDURE EliminarEquipamiento(IN p_id INT)
+BEGIN
+    DELETE FROM Equipamiento WHERE id = p_id;
 END //
 
 DELIMITER ;
